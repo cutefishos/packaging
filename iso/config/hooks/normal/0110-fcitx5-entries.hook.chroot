@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+# fcitx5 lists its daemon, keyboard layout viewer and migration wizard as
+# applications; only its configuration stays in the launcher. The copies in
+# /usr/local shadow the package's entries and keep them usable otherwise:
+# the compositor starts the input method from org.fcitx.Fcitx5.desktop.
+mkdir -p /usr/local/share/applications
+for name in org.fcitx.Fcitx5 kbd-layout-viewer5 org.fcitx.fcitx5-migrator; do
+	sed '/^\[Desktop Entry\]$/a NoDisplay=true' "/usr/share/applications/$name.desktop" \
+		> "/usr/local/share/applications/$name.desktop"
+done
