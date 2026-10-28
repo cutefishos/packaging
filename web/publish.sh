@@ -16,8 +16,7 @@ for arch in amd64 arm64; do
   headers="$(curl -fsSI "$BASE/$name.iso" | tr -d '\r')" || continue
   size="$(awk 'tolower($1) == "content-length:" { print $2 }' <<< "$headers")"
   built="$(sed -n 's/^[Ll]ast-[Mm]odified: //p' <<< "$headers")"
-  digest="$(curl -fsSL "$BASE/$name.iso.sha256" | cut -d ' ' -f 1)"
-  isos+=("$arch" "$name" "$size" "$digest" "$built")
+  isos+=("$arch" "$name" "$size" "$built")
 done
 
 "$(dirname "$0")/index.sh" "${isos[@]}" > index.html

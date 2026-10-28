@@ -3,7 +3,7 @@
 # one download per published ISO: NAME.iso of SIZE bytes for ARCH, built at
 # DATE.
 #
-#   web/index.sh [ARCH NAME SIZE SHA256 DATE]...
+#   web/index.sh [ARCH NAME SIZE DATE]...
 set -Eeuo pipefail
 
 FINGERPRINT="5F52 7F0C B976 4BA0 AF99  BAE5 F4A4 30BC 9E10 91A7"
@@ -52,7 +52,6 @@ code { font-family: ui-monospace, "Noto Sans Mono", monospace; }
 .file { background: var(--alternate-background); border-radius: 10px; padding: 16px; margin: 16px 0; }
 .file .name { font-weight: 600; word-break: break-all; }
 .file .meta { color: var(--secondary-text); font-size: 0.875rem; }
-.file .digest { font-family: ui-monospace, "Noto Sans Mono", monospace; font-size: 0.8125rem; word-break: break-all; }
 footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--separator); color: var(--secondary-text); font-size: 0.875rem; }
 </style>
 </head>
@@ -75,7 +74,7 @@ See <a href="$BLOG">how Cutefish packages are built</a>.
 for (const time of document.querySelectorAll("time[datetime]")) {
   time.textContent = new Date(time.dateTime).toLocaleString("en-US", {
     year: "numeric", month: "long", day: "numeric",
-    hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZoneName: "short",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23",
   });
 }
 </script>
@@ -97,9 +96,9 @@ release yet.</p>
 Cutefish from a USB stick and install it from there. It is meant for testing;
 only the newest one is kept.</p>
 EOF
-  while (( $# >= 5 )); do
-    iso_file "$1" "$2" "$3" "$4" "$5"
-    shift 5
+  while (( $# >= 4 )); do
+    iso_file "$1" "$2" "$3" "$4"
+    shift 4
   done
   cat << EOF
 <p>Compare the checksum, then verify that the ISO was built by the Cutefish
@@ -137,9 +136,9 @@ EOF
 }
 
 iso_file() {
-  local arch="$1" name="$2" size="$3" digest="$4" built stamp human
-  built="$(date -u -d "$5" '+%B %-d, %Y, %H:%M UTC')"
-  stamp="$(date -u -d "$5" '+%Y-%m-%dT%H:%M:%SZ')"
+  local arch="$1" name="$2" size="$3" built stamp human
+  built="$(date -u -d "$4" '+%B %-d, %Y, %H:%M UTC')"
+  stamp="$(date -u -d "$4" '+%Y-%m-%dT%H:%M:%SZ')"
   human="$(awk -v b="$size" 'BEGIN { printf "%.2f GB", b / 1e9 }')"
 
   cat << EOF
@@ -148,10 +147,9 @@ iso_file() {
 <div class="meta">$arch &middot; $human &middot; built <time datetime="$stamp">$built</time> &middot;
 <a href="/iso/nightly/$name.iso.sha256">SHA-256</a> &middot;
 <a href="/iso/nightly/$name.packages">package list</a></div>
-<div class="digest">$digest</div>
 </div>
 EOF
 }
 
-(( $# % 5 == 0 )) || { echo "Usage: web/index.sh [ARCH NAME SIZE SHA256 DATE]..." >&2; exit 1; }
+(( $# % 4 == 0 )) || { echo "Usage: web/index.sh [ARCH NAME SIZE DATE]..." >&2; exit 1; }
 root "$@"
