@@ -70,6 +70,15 @@ from <a href="https://github.com/cutefishos/packaging">cutefishos/packaging</a>.
 See <a href="$BLOG">how Cutefish packages are built</a>.
 </footer>
 </main>
+<script>
+// Build times are written in UTC; the reader's browser knows their time zone.
+for (const time of document.querySelectorAll("time[datetime]")) {
+  time.textContent = new Date(time.dateTime).toLocaleString("en-US", {
+    year: "numeric", month: "long", day: "numeric",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZoneName: "short",
+  });
+}
+</script>
 </body>
 </html>
 EOF
@@ -128,14 +137,15 @@ EOF
 }
 
 iso_file() {
-  local arch="$1" name="$2" size="$3" digest="$4" built human
+  local arch="$1" name="$2" size="$3" digest="$4" built stamp human
   built="$(date -u -d "$5" '+%B %-d, %Y, %H:%M UTC')"
+  stamp="$(date -u -d "$5" '+%Y-%m-%dT%H:%M:%SZ')"
   human="$(awk -v b="$size" 'BEGIN { printf "%.2f GB", b / 1e9 }')"
 
   cat << EOF
 <div class="file">
 <div class="name"><a href="/iso/nightly/$name.iso">$name.iso</a></div>
-<div class="meta">$arch &middot; $human &middot; built $built &middot;
+<div class="meta">$arch &middot; $human &middot; built <time datetime="$stamp">$built</time> &middot;
 <a href="/iso/nightly/$name.iso.sha256">SHA-256</a> &middot;
 <a href="/iso/nightly/$name.packages">package list</a></div>
 <div class="digest">$digest</div>
