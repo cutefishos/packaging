@@ -17,7 +17,7 @@ lb config \
     --binary-image iso-hybrid \
     --archive-areas "main contrib non-free-firmware" \
     --debootstrap-options "--include=ca-certificates" \
-    --bootappend-live "boot=live components username=cutefish hostname=cutefish"
+    --bootappend-live "boot=live components quiet splash username=cutefish hostname=cutefish"
 
 lb build
 

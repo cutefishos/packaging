@@ -1,0 +1,12 @@
+cutefish-plymouth-theme (1.0-1) UNRELEASED; urgency=medium
+
+  * Move the packaging to https://github.com/cutefishos/packaging.
+  * Version every Cutefish package 1.0.
+
+ -- Reion Wong <reionwong@gmail.com>  Wed, 28 Oct 2026 09:50:00 +0800
+
+cutefish-plymouth-theme (0.5) UNRELEASED; urgency=low
+
+  * Initial release (Cutefish)  <reionwong@gmail.com>
+
+ -- Reion Wong <reionwong@gmail.com>  Thu, 16 Sep 2021 02:31:42 +0800

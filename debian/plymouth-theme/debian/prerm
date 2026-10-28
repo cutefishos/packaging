@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = remove ] && [ "$(plymouth-set-default-theme 2>/dev/null)" = cutefish-logo ]; then
+	plymouth-set-default-theme --reset
+fi
+
+#DEBHELPER#

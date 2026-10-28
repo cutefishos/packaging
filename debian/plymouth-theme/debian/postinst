@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = configure ]; then
+	if ! grep -q '^Theme=' /etc/plymouth/plymouthd.conf 2>/dev/null; then
+		plymouth-set-default-theme cutefish-logo
+	fi
+
+	if command -v update-initramfs >/dev/null 2>&1; then
+		update-initramfs -u
+	fi
+
+	if [ -e /boot/grub/grub.cfg ] && command -v update-grub >/dev/null 2>&1; then
+		update-grub
+	fi
+fi
+
+#DEBHELPER#
