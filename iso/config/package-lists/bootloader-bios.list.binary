@@ -1,3 +1,5 @@
-# The BIOS boot loader, for the installer on computers without UEFI. It
+# The BIOS boot loader of amd64, for the installer on computers without UEFI. It
 # conflicts with grub-efi-amd64, so it needs a list (one download) of its own.
+#if ARCHITECTURES amd64
 grub-pc
+#endif

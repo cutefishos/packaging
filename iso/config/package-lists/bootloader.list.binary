@@ -1,3 +1,8 @@
 # On the medium's package pool, for the installer to add to the installed
 # system: it installs and updates the boot loader.
+#if ARCHITECTURES amd64
 grub-efi-amd64
+#endif
+#if ARCHITECTURES arm64
+grub-efi-arm64
+#endif

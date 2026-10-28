@@ -40,16 +40,22 @@ systemd-timesyncd
 
 # Memory and thermals
 systemd-zram-generator
+#if ARCHITECTURES amd64
 thermald
+#endif
 
+#if ARCHITECTURES amd64
 # Processor microcode
 amd64-microcode
 intel-microcode
+#endif
 
 # Graphics and video decoding
 mesa-va-drivers
 mesa-vulkan-drivers
+#if ARCHITECTURES amd64
 intel-media-va-driver
+#endif
 va-driver-all
 
 # Network
@@ -110,7 +116,13 @@ fastfetch
 cutefish-installer
 efibootmgr
 os-prober
+shim-signed
+#if ARCHITECTURES amd64
 grub-efi-amd64-bin
 grub-efi-amd64-signed
 grub-pc-bin
-shim-signed
+#endif
+#if ARCHITECTURES arm64
+grub-efi-arm64-bin
+grub-efi-arm64-signed
+#endif

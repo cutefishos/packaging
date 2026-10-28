@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Writes the index pages of download.cutefish.org to standard output:
+# Writes the front page of download.cutefish.org to standard output, with
+# one download per published ISO: NAME.iso of SIZE bytes for ARCH, built at
+# DATE.
 #
-#   web/index.sh root                       # the repository's front page
-#   web/index.sh iso NAME SIZE SHA256 [DATE]  # iso/nightly/, for NAME.iso built at
-#                                             # DATE (now by default)
+#   web/index.sh [ARCH NAME SIZE SHA256 DATE]...
 set -Eeuo pipefail
 
 FINGERPRINT="5F52 7F0C B976 4BA0 AF99  BAE5 F4A4 30BC 9E10 91A7"
@@ -84,9 +84,23 @@ Desktop, built from the latest code every night. Nothing here is an official
 release yet.</p>
 
 <h2>Nightly ISO</h2>
-<p>The newest live ISO, on Debian 13: try Cutefish from a USB stick and install
-it from there. See <a href="/iso/nightly/">iso/nightly</a>. The ISO is for amd64
-only for now; on arm64, add the APT repository below to Debian 13.</p>
+<p>The newest live ISO of Cutefish on Debian 13, built from the latest code: try
+Cutefish from a USB stick and install it from there. It is meant for testing;
+only the newest one is kept.</p>
+EOF
+  while (( $# >= 5 )); do
+    iso_file "$1" "$2" "$3" "$4" "$5"
+    shift 5
+  done
+  cat << EOF
+<p>Compare the checksum, then verify that the ISO was built by the Cutefish
+workflow and not changed since, with the
+<a href="https://cli.github.com/">GitHub CLI</a> 2.49 or later:</p>
+<pre><code>sha256sum -c NAME.iso.sha256
+gh attestation verify NAME.iso --repo cutefishos/packaging</code></pre>
+<p><a href="/iso/nightly/LATEST-amd64">LATEST-amd64</a> and
+<a href="/iso/nightly/LATEST-arm64">LATEST-arm64</a> always name the newest ISO,
+for scripts.</p>
 
 <h2>APT repository for Debian 13</h2>
 <p>To add Cutefish Desktop to Debian 13 (trixie) on amd64 or arm64, download the key,
@@ -113,43 +127,21 @@ EOF
   footer
 }
 
-iso() {
-  local name="$1" size="$2" digest="$3" built human
-  built="$(date -u -d "${4:-now}" '+%B %-d, %Y, %H:%M UTC')"
+iso_file() {
+  local arch="$1" name="$2" size="$3" digest="$4" built human
+  built="$(date -u -d "$5" '+%B %-d, %Y, %H:%M UTC')"
   human="$(awk -v b="$size" 'BEGIN { printf "%.2f GB", b / 1e9 }')"
 
-  header "Cutefish nightly ISO for Debian 13"
   cat << EOF
-<h1>Cutefish nightly ISO for Debian 13</h1>
-<p class="lead">The newest live ISO of Cutefish on Debian 13, built from the
-latest code. It is meant for testing; only the newest one is kept. It is for
-amd64 only for now; on arm64, add the <a href="/">APT repository</a> to
-Debian 13 instead.</p>
-
 <div class="file">
-<div class="name"><a href="$name.iso">$name.iso</a></div>
-<div class="meta">$human &middot; built $built &middot;
-<a href="$name.iso.sha256">SHA-256</a> &middot;
-<a href="$name.packages">package list</a></div>
+<div class="name"><a href="/iso/nightly/$name.iso">$name.iso</a></div>
+<div class="meta">$arch &middot; $human &middot; built $built &middot;
+<a href="/iso/nightly/$name.iso.sha256">SHA-256</a> &middot;
+<a href="/iso/nightly/$name.packages">package list</a></div>
 <div class="digest">$digest</div>
 </div>
-
-<h2>Checking the download</h2>
-<p>Compare the checksum, then verify that the ISO was built by the Cutefish
-workflow and not changed since, with the
-<a href="https://cli.github.com/">GitHub CLI</a> 2.49 or later:</p>
-<pre><code>sha256sum -c $name.iso.sha256
-gh attestation verify $name.iso --repo cutefishos/packaging</code></pre>
-<p><a href="LATEST">LATEST</a> always names the newest ISO, for scripts.</p>
 EOF
-  footer
 }
 
-case "${1:-}" in
-  root) root ;;
-  iso)
-    (( $# == 4 || $# == 5 )) || { echo "Usage: web/index.sh iso NAME SIZE SHA256 [DATE]" >&2; exit 1; }
-    iso "$2" "$3" "$4" "${5:-}"
-    ;;
-  *) echo "Usage: web/index.sh root | iso NAME SIZE SHA256 [DATE]" >&2; exit 1 ;;
-esac
+(( $# % 5 == 0 )) || { echo "Usage: web/index.sh [ARCH NAME SIZE SHA256 DATE]..." >&2; exit 1; }
+root "$@"

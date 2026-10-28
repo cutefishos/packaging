@@ -61,8 +61,9 @@ sudo apt install cutefish-desktop
 
 ## ISO
 
-The ISO installs `cutefish-desktop` from download.cutefish.org. CI builds it after
-each package publish; to build it locally, as root:
+The ISO installs `cutefish-desktop` from download.cutefish.org. CI builds it for
+amd64 and arm64 after each package publish; to build it locally for the
+machine's architecture, as root:
 
 ```shell
 iso/build.sh
