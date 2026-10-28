@@ -1,7 +1,22 @@
 # Desktop
 cutefish-desktop
+cutefish-computer-use
+xwayland
+xdg-user-dirs
+
+# Live system
+live-tools
+user-setup
+sudo
+locales
+keyboard-configuration
 
 # Base
+apparmor
+ca-certificates
+libnss-systemd
+libpam-cap
+zstd
 bash-completion
 bind9-dnsutils
 curl
@@ -27,13 +42,35 @@ systemd-timesyncd
 systemd-zram-generator
 thermald
 
+# Processor microcode
+amd64-microcode
+intel-microcode
+
+# Graphics and video decoding
+mesa-va-drivers
+mesa-vulkan-drivers
+intel-media-va-driver
+va-driver-all
+
 # Network
 iw
 wireless-regdb
 wpasupplicant
+dnsmasq-base
+publicsuffix
+avahi-daemon
+libnss-mdns
+
+# Mobile broadband
+modemmanager
+usb-modeswitch
+ppp
 
 # Audio
 pipewire-audio
+alsa-ucm-conf
+alsa-topology-conf
+rtkit
 
 # Authorization
 pkexec
@@ -42,9 +79,23 @@ pkexec
 fcitx5
 fcitx5-frontend-all
 fcitx5-config-qt
-im-config
+
+# Qt and GTK applications
+qt6-wayland
+qt6-svg-plugins
+qtwayland5
+librsvg2-common
+at-spi2-core
+
+# Disks and devices
+ntfs-3g
+exfatprogs
+systemd-cryptsetup
+libmtp-runtime
+usbmuxd
 
 # Fonts
+fonts-liberation
 fonts-noto-core
 fonts-noto-cjk
 fonts-noto-mono
@@ -52,11 +103,13 @@ fonts-noto-color-emoji
 
 # Utility
 chromium
+chromium-sandbox
 fastfetch
 
 # Installer, with the boot loader programs it puts on the disk
 cutefish-installer
 efibootmgr
+os-prober
 grub-efi-amd64-bin
 grub-efi-amd64-signed
 grub-pc-bin

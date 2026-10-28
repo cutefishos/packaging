@@ -16,6 +16,7 @@ lb config \
     --architecture amd64 \
     --binary-image iso-hybrid \
     --archive-areas "main contrib non-free-firmware" \
+    --apt-recommends false \
     --debootstrap-options "--include=ca-certificates" \
     --bootappend-live "boot=live components quiet splash username=cutefish hostname=cutefish"
 
