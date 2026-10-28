@@ -8,6 +8,7 @@ set -Eeuo pipefail
 
 FINGERPRINT="5F52 7F0C B976 4BA0 AF99  BAE5 F4A4 30BC 9E10 91A7"
 BLOG="https://cutefish.org/blog/how-cutefish-is-built/"
+VERSION="$(awk '$1 == "cutefish-desktop" { print $2 }' "$(dirname "$0")/../versions")"
 
 header() {
   cat << EOF
@@ -91,8 +92,8 @@ root() {
 Desktop, built from the latest code every night. Nothing here is an official
 release yet.</p>
 
-<h2>Nightly ISO</h2>
-<p>The newest live ISO of Cutefish on Debian 13, built from the latest code: try
+<h2>Cutefish $VERSION nightly ISO</h2>
+<p>The newest live ISO of Cutefish $VERSION on Debian 13, built from the latest code: try
 Cutefish from a USB stick and install it from there. It is meant for testing;
 only the newest one is kept.</p>
 EOF

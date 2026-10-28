@@ -16,8 +16,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Both architectures name their ISO after the same start time.
+  stamp:
+    name: Build time
+    runs-on: ubuntu-24.04
+    outputs:
+      stamp: ${{ steps.stamp.outputs.stamp }}
+
+    steps:
+      - name: Stamp
+        id: stamp
+        run: echo "stamp=$(date -u +%Y%m%d-%H%M)" >> "$GITHUB_OUTPUT"
+
   build:
     name: Debian 13 ${{ matrix.arch }}
+    needs: stamp
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
     strategy:
@@ -43,7 +56,11 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Name
-        run: echo "NAME=cutefish-nightly-$(date -u +%Y%m%d)-$(git rev-parse --short=7 HEAD)-${{ matrix.arch }}" >> "$GITHUB_ENV"
+        env:
+          STAMP: ${{ needs.stamp.outputs.stamp }}
+        run: |
+          version="$(awk '$1 == "cutefish-desktop" { print $2 }' versions)"
+          echo "NAME=cutefish-$version-nightly-$STAMP-${{ matrix.arch }}" >> "$GITHUB_ENV"
 
       - name: Build ISO
         run: |
@@ -112,8 +129,7 @@ jobs:
           echo "$NAME" > LATEST
           s3 cp LATEST "s3://$BUCKET/iso/nightly/LATEST-${{ matrix.arch }}"
 
-          # Only the newest builds stay; names sort by date, and the listing by
-          # upload time breaks ties within a day.
+          # Only the newest uploads of this architecture stay.
           s3 ls "s3://$BUCKET/iso/nightly/" | awk '/-${{ matrix.arch }}\.iso$/ { print $1 " " $2 " " $4 }' | sort -r \
             | tail -n +$((KEEP + 1)) | while read -r _ _ old; do
                 old="${old%.iso}"
