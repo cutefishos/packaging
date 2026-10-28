@@ -17,4 +17,5 @@ Architecture: any
 Depends: cutefish-toolkit,
          ${misc:Depends},
          ${shlibs:Depends}
+Provides: x-terminal-emulator
 Description: CutefishOS Terminal
