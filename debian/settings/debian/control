@@ -24,6 +24,7 @@ Architecture: any
 Depends: power-profiles-daemon,
          cutefish-toolkit,
          cutefish-framework,
+         cutefish-wallpapers,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Cutefish Settings
