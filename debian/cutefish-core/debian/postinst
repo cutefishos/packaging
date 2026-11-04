@@ -19,6 +19,13 @@ case "$1" in
     configure)
         update-alternatives --install /usr/bin/x-session-manager \
 	x-session-manager /usr/bin/cutefish-session 60
+
+        # The shared Applications folder: administrators change it, others
+        # through cutefish-applications-folder.
+        mkdir -p /Applications
+        chown root:sudo /Applications
+        chmod 2775 /Applications
+        setfacl -m g:sudo:rwx -m d:g:sudo:rwx /Applications
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

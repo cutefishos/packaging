@@ -28,6 +28,7 @@ Homepage: https://github.com/cutefishos/cutefish-core
 Package: cutefish-core
 Architecture: any
 Depends: accountsservice,
+         acl,
          polkitd,
          gsettings-desktop-schemas,
          cutefish-toolkit,
