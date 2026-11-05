@@ -12,6 +12,7 @@
 #                                              # before the ones that need it
 #   debian/build.sh --snapshot                 # versioned after the commit,
 #                                              # e.g. 1.0~git20261020120000.1a2b3c4-1
+#   debian/build.sh --skip cutefish-webkit     # every package but this one
 set -Eeuo pipefail
 
 PACKAGING="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -20,10 +21,12 @@ OUT="$PACKAGING/out/debian"
 
 INSTALL=false
 SNAPSHOT=false
+SKIP=()
 while [[ "${1:-}" == --* ]]; do
   case "$1" in
     --install) INSTALL=true ;;
     --snapshot) SNAPSHOT=true ;;
+    --skip) SKIP+=("${2:?--skip needs a project}"); shift ;;
     *) echo "Error: unknown option $1" >&2; exit 1 ;;
   esac
   shift
@@ -42,7 +45,7 @@ while read -r project version; do
   VERSIONS[$project]="$version"
 done < "$PACKAGING/versions"
 
-for name in "$@"; do
+for name in "$@" "${SKIP[@]}"; do
   [[ -n "${VERSIONS[$name]:-}" ]] || { echo "Error: $name is not in versions" >&2; exit 1; }
 done
 
@@ -90,6 +93,7 @@ done
 
 PROJECTS=()
 for project in "${ORDER[@]}"; do
+  [[ " ${SKIP[*]} " == *" $project "* ]] && continue
   if (( $# == 0 )) || [[ " $* " == *" $project "* ]]; then
     PROJECTS+=("$project")
   fi

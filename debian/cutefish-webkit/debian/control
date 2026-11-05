@@ -1,0 +1,50 @@
+Source: cutefish-webkit
+Section: libs
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               ninja-build,
+               gperf,
+               perl,
+               python3,
+               ruby,
+               unifdef,
+               pkg-config,
+               libcurl4-openssl-dev,
+               libssl-dev,
+               libpsl-dev,
+               libicu-dev,
+               libxml2-dev,
+               libxslt1-dev,
+               libsqlite3-dev,
+               libegl-dev,
+               libgles-dev,
+               libepoxy-dev,
+               libgbm-dev,
+               libdrm-dev,
+               libxkbcommon-dev,
+               libfontconfig-dev,
+               libfreetype-dev,
+               libharfbuzz-dev,
+               liblcms2-dev,
+               zlib1g-dev,
+               libjpeg-dev,
+               libpng-dev,
+               libwebp-dev,
+               libavif-dev,
+               libjxl-dev,
+               libwoff-dev
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/cutefish-webkit
+
+Package: cutefish-webkit
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: Cutefish web engine
+ The web engine of the Cutefish desktop: a WebKit port based on WPE WebKit,
+ with the curl network backend and Skia rendering into DMA-BUF buffers. It
+ holds libcutefish-webkit with WebKit's and JavaScriptCore's C APIs, the web
+ and network processes, and the headers and pkg-config file to build against
+ it.

@@ -49,7 +49,9 @@ with the default GnuPG key.
 
 ## APT repository
 
-CI builds snapshots of every package each night and publishes them:
+CI builds snapshots of every package each night and publishes them;
+cutefish-webkit, which takes hours to build, is rebuilt only when its commit or
+its packaging changes:
 
 ```
 sudo curl -fsSLo /etc/apt/keyrings/cutefish.asc https://download.cutefish.org/debian/cutefish.asc

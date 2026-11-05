@@ -92,7 +92,7 @@ jobs:
           COMMITS: ${{ needs.changes.outputs.commits }}
         run: |
           echo "$COMMITS" | while read -r project commit; do
-            [[ "$project" == packaging ]] && continue
+            [[ "$project" == packaging || "$project" == cutefish-webkit ]] && continue
             git init --quiet "$project"
             git -C "$project" fetch --quiet --depth 1 "https://github.com/cutefishos/$project.git" "$commit"
             git -C "$project" checkout --quiet --detach FETCH_HEAD
@@ -125,7 +125,7 @@ jobs:
                 xz-utils
 
               git config --global --add safe.directory "*"
-              packaging/debian/build.sh --install --snapshot
+              packaging/debian/build.sh --install --snapshot --skip cutefish-webkit
             '
           sudo chown -R "$(id -u):$(id -g)" packaging/out
 
@@ -139,9 +139,90 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  # WebKit takes hours to build, so it has a job of its own and is rebuilt
+  # only when its commit or its packaging changes.
+  webkit:
+    name: WebKit ${{ matrix.arch }}
+    needs: changes
+    if: needs.changes.outputs.changed == 'true'
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 360
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          path: packaging
+
+      - name: Find the commit
+        id: commit
+        env:
+          COMMITS: ${{ needs.changes.outputs.commits }}
+        run: echo "commit=$(echo "$COMMITS" | awk '$1 == "cutefish-webkit" { print $2 }')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the packages
+        id: cache
+        uses: actions/cache@v6
+        with:
+          path: packaging/out/debian
+          key: webkit-${{ matrix.arch }}-${{ steps.commit.outputs.commit }}-${{ hashFiles('packaging/debian/cutefish-webkit/**', 'packaging/debian/build.sh') }}
+
+      - name: Free disk space
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache
+          df -h /
+
+      - name: Check out WebKit
+        if: steps.cache.outputs.cache-hit != 'true'
+        env:
+          COMMIT: ${{ steps.commit.outputs.commit }}
+        run: |
+          git init --quiet cutefish-webkit
+          git -C cutefish-webkit fetch --quiet --depth 1 https://github.com/cutefishos/cutefish-webkit.git "$COMMIT"
+          git -C cutefish-webkit checkout --quiet --detach FETCH_HEAD
+
+      - name: Build
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          docker run --rm \
+            -v "$PWD:/work" \
+            -w /work \
+            debian:trixie \
+            bash -euo pipefail -c '
+              apt-get update
+              apt-get install -y --no-install-recommends \
+                build-essential \
+                ca-certificates \
+                devscripts \
+                equivs \
+                git \
+                xz-utils
+
+              git config --global --add safe.directory "*"
+              packaging/debian/build.sh --install --snapshot cutefish-webkit
+            '
+          sudo chown -R "$(id -u):$(id -g)" packaging/out
+          rm -f packaging/out/debian/*-dbgsym_*
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: webkit-${{ matrix.arch }}
+          path: packaging/out/debian/*
+          if-no-files-found: error
+          retention-days: 7
+
   repository:
     name: Repository
-    needs: [changes, build]
+    needs: [changes, build, webkit]
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -159,6 +240,18 @@ jobs:
         with:
           pattern: packages-*
           path: out
+
+      - name: Download WebKit
+        uses: actions/download-artifact@v8
+        with:
+          pattern: webkit-*
+          path: out
+
+      - name: Add WebKit
+        run: |
+          for arch in amd64 arm64; do
+            cp "out/webkit-$arch"/* "out/packages-$arch/"
+          done
 
       # The amd64 build provides the sources and the Architecture: all
       # packages.
@@ -256,7 +349,7 @@ jobs:
             bash -euo pipefail -c '
               echo "deb [$SIGNED] file:/repo $SUITE main" > /etc/apt/sources.list.d/cutefish.list
               apt-get update
-              apt-get install -y cutefish-desktop
+              apt-get install -y cutefish-desktop cutefish-webkit
               dpkg -l | grep cutefish
             '
 

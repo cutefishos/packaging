@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+# With debug information the build outgrows the CI runners' memory and disk.
+export DEB_CFLAGS_MAINT_STRIP = -g
+export DEB_CXXFLAGS_MAINT_STRIP = -g
+
+%:
+	dh $@ --buildsystem=cmake+ninja
+
+# WebKit turns its assertions off only under NDEBUG, which the Release build
+# type defines.
+override_dh_auto_configure:
+	dh_auto_configure -- -DPORT=Cutefish -DCMAKE_BUILD_TYPE=Release
+
+# The API tests are not built.
+override_dh_auto_test:
+
+# dwz fails on binaries without debug information.
+override_dh_dwz:
