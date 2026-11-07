@@ -2,8 +2,16 @@
 
 set -e
 
-if [ "$1" = remove ] && [ "$(plymouth-set-default-theme 2>/dev/null)" = cutefish-logo ]; then
-	plymouth-set-default-theme --reset
+THEME=/usr/share/plymouth/themes/cutefish-logo/cutefish-logo.plymouth
+
+if [ "$1" = remove ]; then
+	if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+		if [ "$(plymouth-set-default-theme 2>/dev/null)" = cutefish-logo ]; then
+			plymouth-set-default-theme --reset
+		fi
+	else
+		update-alternatives --remove default.plymouth "$THEME" || true
+	fi
 fi
 
 #DEBHELPER#

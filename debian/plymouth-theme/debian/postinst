@@ -2,9 +2,20 @@
 
 set -e
 
+THEME=/usr/share/plymouth/themes/cutefish-logo/cutefish-logo.plymouth
+
 if [ "$1" = configure ]; then
-	if ! grep -q '^Theme=' /etc/plymouth/plymouthd.conf 2>/dev/null; then
-		plymouth-set-default-theme cutefish-logo
+	if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+		# Debian
+		if ! grep -q '^Theme=' /etc/plymouth/plymouthd.conf 2>/dev/null; then
+			plymouth-set-default-theme cutefish-logo
+		fi
+	else
+		# Ubuntu: themes are registered as alternatives. 200 outranks the stock
+		# themes (bgrt 110), so it becomes the default unless the administrator
+		# has picked a theme by hand (manual mode), which is left alone.
+		update-alternatives --install /usr/share/plymouth/themes/default.plymouth \
+			default.plymouth "$THEME" 200
 	fi
 
 	if command -v update-initramfs >/dev/null 2>&1; then
