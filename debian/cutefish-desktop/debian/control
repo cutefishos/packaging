@@ -37,3 +37,4 @@ Recommends: cutefish-computer-use,
 Description: Cutefish desktop environment
  This metapackage installs the complete Cutefish desktop: the compositor and
  shell, the display manager, the system components and the applications.
+ It also makes Firefox show its menus in the global menu bar by default.
