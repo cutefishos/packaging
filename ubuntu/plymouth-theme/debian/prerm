@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+THEME=/usr/share/plymouth/themes/cutefish-logo/cutefish-logo.plymouth
+
+if [ "$1" = remove ]; then
+	update-alternatives --remove default.plymouth "$THEME"
+fi
+
+#DEBHELPER#

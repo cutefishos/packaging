@@ -47,6 +47,20 @@ in `versions`, so it should name the next release, not the last one.
 `trixie-nightly` suite of an APT repository under `repo/`; `--sign` signs it
 with the default GnuPG key.
 
+## Ubuntu
+
+The Debian packaging builds on Ubuntu as it is, apart from what a package's
+maintainer scripts expect of the distribution: Ubuntu, for one, has no
+`plymouth-set-default-theme` and registers Plymouth themes as alternatives.
+`ubuntu/<project>/debian/` holds only such files; an Ubuntu build lays them
+over the Debian packaging and takes Ubuntu's revision (`1.0-1ubuntu1`):
+
+```shell
+debian/build.sh --distribution ubuntu --install
+```
+
+Packages land in `out/ubuntu/`.
+
 ## APT repository
 
 CI builds snapshots of every package each night and publishes them;

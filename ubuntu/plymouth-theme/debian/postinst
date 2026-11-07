@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -e
+
+THEME=/usr/share/plymouth/themes/cutefish-logo/cutefish-logo.plymouth
+
+if [ "$1" = configure ]; then
+	# Ubuntu has no plymouth-set-default-theme: its themes are alternatives
+	# for default.plymouth. 200 outranks the stock themes (bgrt is 110), so
+	# the theme becomes the default unless the administrator picked one by
+	# hand, which puts the alternative in manual mode and is left alone.
+	update-alternatives --install /usr/share/plymouth/themes/default.plymouth \
+		default.plymouth "$THEME" 200
+
+	if command -v update-initramfs >/dev/null 2>&1; then
+		update-initramfs -u
+	fi
+
+	if [ -e /boot/grub/grub.cfg ] && command -v update-grub >/dev/null 2>&1; then
+		update-grub
+	fi
+fi
+
+#DEBHELPER#
