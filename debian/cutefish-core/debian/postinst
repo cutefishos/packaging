@@ -26,6 +26,12 @@ case "$1" in
         chown root:sudo /Applications
         chmod 2775 /Applications
         setfacl -m g:sudo:rwx -m d:g:sudo:rwx /Applications
+
+        # Disk images that programs attach themselves are mounted here,
+        # each user's in a folder of its own.
+        mkdir -p /Volumes
+        chown root:root /Volumes
+        chmod 1777 /Volumes
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
