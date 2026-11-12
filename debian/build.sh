@@ -13,24 +13,33 @@
 #   debian/build.sh --snapshot                 # versioned after the commit,
 #                                              # e.g. 1.0~git20261020120000.1a2b3c4-1
 #   debian/build.sh --skip cutefish-webkit     # every package but this one
+#   debian/build.sh --distribution ubuntu      # the Debian packaging with
+#                                              # ubuntu/<project>/debian/ laid
+#                                              # over it, into out/ubuntu/
 set -Eeuo pipefail
 
 PACKAGING="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SOURCES="$(dirname "$PACKAGING")"
-OUT="$PACKAGING/out/debian"
 
 INSTALL=false
 SNAPSHOT=false
+DISTRIBUTION=debian
 SKIP=()
 while [[ "${1:-}" == --* ]]; do
   case "$1" in
     --install) INSTALL=true ;;
     --snapshot) SNAPSHOT=true ;;
+    --distribution) DISTRIBUTION="${2:?--distribution needs debian or ubuntu}"; shift ;;
     --skip) SKIP+=("${2:?--skip needs a project}"); shift ;;
     *) echo "Error: unknown option $1" >&2; exit 1 ;;
   esac
   shift
 done
+case "$DISTRIBUTION" in
+  debian|ubuntu) ;;
+  *) echo "Error: --distribution takes debian or ubuntu" >&2; exit 1 ;;
+esac
+OUT="$PACKAGING/out/$DISTRIBUTION"
 
 SUDO=(sudo)
 if (( EUID == 0 )); then
@@ -109,6 +118,27 @@ fi
 
 mkdir -p "$OUT"
 
+# Lays the distribution's files over the Debian packaging copied to
+# $tree/debian: ubuntu/<project>/debian/ holds only what differs, such as
+# maintainer scripts for a distribution that lacks a tool Debian's rely on. An
+# Ubuntu package takes Ubuntu's revision, so it sorts after the Debian one it
+# extends and tells itself apart from it.
+overlay_packaging() {
+  [[ "$DISTRIBUTION" == debian ]] && return 0
+  local extra="$PACKAGING/$DISTRIBUTION/$project/debian"
+  if [[ -d "$extra" ]]; then
+    cp -a "$extra/." "$tree/debian/"
+  fi
+  version="$version${DISTRIBUTION}1"
+  {
+    printf '%s (%s) UNRELEASED; urgency=medium\n\n  * Built for %s with the %s/%s/debian/ files laid over the Debian packaging.\n\n -- %s  %s\n\n' \
+      "$source" "$version" "$DISTRIBUTION" "$DISTRIBUTION" "$project" \
+      "$(dpkg-parsechangelog -l "$tree/debian/changelog" -S Maintainer)" "$(date -R)"
+    cat "$tree/debian/changelog"
+  } > "$tree/debian/changelog.new"
+  mv "$tree/debian/changelog.new" "$tree/debian/changelog"
+}
+
 # Installs the binary packages just built for $source $version.
 install_built() {
   [[ "$INSTALL" == true ]] || return 0
@@ -161,6 +191,7 @@ for project in "${PROJECTS[@]}"; do
     rm -rf "$tree"
     mkdir -p "$tree"
     cp -a "$packaging" "$tree/debian"
+    overlay_packaging
     (cd "$tree" && dpkg-buildpackage -us -uc)
     rm -rf "$tree"
     install_built
@@ -203,6 +234,7 @@ for project in "${PROJECTS[@]}"; do
       dch --force-bad-version --newversion "$version" --distribution UNRELEASED \
         "Snapshot of commit $(git -C "$src" rev-parse HEAD).")
   fi
+  overlay_packaging
 
   (cd "$tree" && dpkg-buildpackage -us -uc)
   rm -rf "$tree"
