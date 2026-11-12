@@ -71,6 +71,11 @@ machine's architecture, as root:
 iso/build.sh
 ```
 
+The live session needs atomic KMS, which the compositor requires. Nouveau
+exposes it only when booted with `nouveau.atomic=1`; the ISO adds it to the
+kernel command line and installs `/etc/modprobe.d/cutefish-nouveau-atomic.conf`,
+so installed systems keep it.
+
 ## Releasing a version
 
 Change the project's line in `versions` and add a matching entry to its
