@@ -1,0 +1,41 @@
+{
+  "logo": {
+    "type": "file",
+    "source": "/usr/share/cutefish/fastfetch/logo.txt",
+    "color": {
+      "1": "38;2;0;192;255",
+      "2": "38;2;21;166;255",
+      "3": "38;2;43;140;255",
+      "4": "38;2;64;114;255",
+      "5": "38;2;85;88;255"
+    },
+    "padding": { "top": 1, "left": 2, "right": 3 }
+  },
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "host",
+    "kernel",
+    "uptime",
+    "packages",
+    "shell",
+    "display",
+    "de",
+    "wm",
+    "wmtheme",
+    "terminal",
+    "terminalfont",
+    "cpu",
+    "gpu",
+    "memory",
+    "swap",
+    "disk",
+    "localip",
+    "battery",
+    "poweradapter",
+    "locale",
+    "break",
+    "colors"
+  ]
+}
