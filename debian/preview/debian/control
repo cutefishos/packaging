@@ -1,0 +1,21 @@
+Source: cutefish-preview
+Section: graphics
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit,
+               cutefish-framework,
+               gettext,
+               libpng-dev,
+               pkg-config
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/preview
+
+Package: cutefish-preview
+Architecture: any
+Depends: cutefish-toolkit,
+         cutefish-framework,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: CutefishOS Preview
