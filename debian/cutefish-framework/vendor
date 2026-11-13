@@ -1,0 +1,3 @@
+# The PDFium sources and the headers scripts/fetch-pdfium.sh fetches.
+third_party/pdfium
+third_party/pdfium-deps

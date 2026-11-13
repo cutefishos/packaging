@@ -108,6 +108,9 @@ jobs:
       - name: Fetch Skia
         run: cutefish-toolkit/scripts/fetch-skia.sh
 
+      - name: Fetch PDFium
+        run: cutefish-framework/scripts/fetch-pdfium.sh
+
       - name: Build
         run: |
           docker run --rm \

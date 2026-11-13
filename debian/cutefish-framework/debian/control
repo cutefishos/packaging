@@ -5,12 +5,21 @@ Maintainer: Reion Wong <reionwong@gmail.com>
 Build-Depends: cmake,
                debhelper-compat (= 13),
                cutefish-toolkit,
+               libabsl-dev,
+               libfontconfig-dev,
+               libfreetype-dev,
+               libharfbuzz-dev,
+               libhwy-dev,
                libicu-dev,
+               libjpeg-dev,
+               liblcms2-dev,
+               libopenjp2-7-dev,
                libpng-dev,
                libsystemd-dev,
                libpipewire-0.3-dev (>= 0.3.65),
                libspa-0.2-dev,
-               pkg-config
+               pkg-config,
+               zlib1g-dev
 Standards-Version: 4.7.2
 Homepage: https://github.com/cutefishos/cutefish-framework
 
