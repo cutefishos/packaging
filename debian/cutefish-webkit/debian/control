@@ -35,17 +35,24 @@ Build-Depends: cmake,
                libwebp-dev,
                libavif-dev,
                libjxl-dev,
-               libwoff-dev
+               libwoff-dev,
+               libgstreamer1.0-dev,
+               libgstreamer-plugins-base1.0-dev
 Standards-Version: 4.7.2
 Homepage: https://github.com/cutefishos/cutefish-webkit
 
 Package: cutefish-webkit
 Architecture: any
 Depends: ${misc:Depends},
-         ${shlibs:Depends}
+         ${shlibs:Depends},
+         gstreamer1.0-plugins-base,
+         gstreamer1.0-plugins-good
+Recommends: gstreamer1.0-plugins-bad,
+            gstreamer1.0-libav,
+            gstreamer1.0-gl
 Description: Cutefish web engine
  The web engine of the Cutefish desktop: a WebKit port based on WPE WebKit,
- with the curl network backend and Skia rendering into DMA-BUF buffers. It
- holds libcutefish-webkit with WebKit's and JavaScriptCore's C APIs, the web
- and network processes, and the headers and pkg-config file to build against
- it.
+ with the curl network backend, Skia rendering into DMA-BUF buffers and media
+ through GStreamer. It holds libcutefish-webkit with WebKit's and
+ JavaScriptCore's C APIs, the web and network processes, and the headers and
+ pkg-config file to build against it.
