@@ -35,6 +35,7 @@ Depends: accountsservice,
          cutefish-framework,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: va-driver-all | va-driver,
+Recommends: packagekit,
+            va-driver-all | va-driver,
             systemd-coredump
 Description: CutefishOS System Components
