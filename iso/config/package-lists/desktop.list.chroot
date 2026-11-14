@@ -81,6 +81,12 @@ rtkit
 # Authorization
 pkexec
 
+# Software Update
+packagekit
+
+# Crash reports
+systemd-coredump
+
 # Input method
 fcitx5
 fcitx5-frontend-all
