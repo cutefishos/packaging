@@ -29,13 +29,13 @@ Package: cutefish-core
 Architecture: any
 Depends: accountsservice,
          acl,
+         packagekit,
          polkitd,
          gsettings-desktop-schemas,
          cutefish-toolkit,
          cutefish-framework,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: packagekit,
-            va-driver-all | va-driver,
+Recommends: va-driver-all | va-driver,
             systemd-coredump
 Description: CutefishOS System Components
