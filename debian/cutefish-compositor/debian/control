@@ -45,5 +45,5 @@ Recommends: xwayland,
 Description: CutefishOS Wayland compositor and desktop shell
  The Cutefish desktop's display server: DRM/KMS output, input, window
  management, server-side decorations, animations and the lock screen, with
- the status bar, dock, launcher, notifications and screen capture built in.
+ the menu bar, dock, launcher, notifications and screen capture built in.
  X11 applications run through Xwayland when it is installed.
