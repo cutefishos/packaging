@@ -1,2 +1,2 @@
 debian/firefox/policies.json etc/firefox/policies
-debian/nouveau-atomic.conf etc/modprobe.d/cutefish-nouveau-atomic.conf
+debian/cutefish-nouveau-atomic.conf etc/modprobe.d
