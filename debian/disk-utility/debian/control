@@ -1,0 +1,27 @@
+Source: cutefish-disk-utility
+Section: utils
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/disk-utility
+
+Package: cutefish-disk-utility
+Architecture: any
+Depends: cutefish-toolkit,
+         btrfs-progs,
+         dosfstools,
+         e2fsprogs,
+         exfatprogs,
+         ntfs-3g,
+         polkitd,
+         udisks2,
+         xfsprogs,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: CutefishOS Disk Utility
+ Lists the disks, volumes and disk images, and mounts, erases, partitions,
+ checks and repairs them. The disks come from UDisks2; each filesystem it
+ formats needs the tools of its own package, all of which this one pulls in.
