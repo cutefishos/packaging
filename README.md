@@ -92,3 +92,5 @@ Change the project's line in `versions` and add a matching entry to its
 ## License
 
 Each package's licence is in its `debian/copyright`.
+
+## Updating...
