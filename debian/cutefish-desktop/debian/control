@@ -11,6 +11,7 @@ Package: cutefish-desktop
 Architecture: all
 Depends: cutefish-calculator,
          cutefish-calendar,
+         cutefish-clock,
          cutefish-compositor,
          cutefish-core,
          cutefish-disk-utility,

@@ -1,0 +1,23 @@
+Source: cutefish-clock
+Section: utils
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit,
+               libicu-dev,
+               libpipewire-0.3-dev,
+               pkg-config
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/clock
+
+Package: cutefish-clock
+Architecture: any
+Depends: cutefish-toolkit,
+         tzdata,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: CutefishOS Clock
+ World clock, alarms, stopwatch and timers. Alarms and timers ring from
+ cutefish-clock-alarms, a small service started with the session, while the
+ window is closed.
