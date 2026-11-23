@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: cutefish-search
+Source: https://github.com/shirushimorii/cutelight
+
+Files: *
+Copyright: 2026 Mori
+License: BSD-3-Clause
