@@ -1,0 +1,19 @@
+Source: cutefish-search
+Section: utils
+Priority: optional
+Maintainer: CutefishOS <cutefishos@foxmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit,
+               pkg-config
+Standards-Version: 4.7.2
+Homepage: https://github.com/shirushimorii/cutelight
+
+Package: cutefish-search
+Architecture: any
+Depends: cutefish-toolkit,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: Spotlight-style desktop search for Cutefish
+ A native Cutefish Toolkit application providing quick application search,
+ calculator expressions, basic currency conversion, and web search fallback.
